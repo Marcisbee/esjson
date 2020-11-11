@@ -16,6 +16,7 @@ esjson file.json --schema=schema.json
 
 ## Options
 
+```
 Usage: esjson [file] [options]
 
 file     file to parse; otherwise uses stdin
@@ -24,6 +25,7 @@ Options:
    -v, --version            print version and exit
    -s, --schema             validate json according to schema
    -e, --extensions         array of file paths to include (default: *.json)
+```
 
 # MIT License
 Copyright (C) 2020 Marcis Bergmanis
