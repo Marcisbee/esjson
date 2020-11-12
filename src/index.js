@@ -1,5 +1,5 @@
 const arg = require("arg");
-const {yellow} = require("colorette");
+const {yellow, bold} = require("colorette");
 const {resolve} = require("path");
 
 const {directory} = require("./directory");
@@ -77,7 +77,9 @@ function validator() {
 				}
 
 				console.log(
-					yellow(`Allowing "${name}" to pass "${type}" on "${title}"`),
+					yellow(
+						`${bold("!")} Allowing "${name}" to pass ${type} on "${title}"`,
+					),
 				);
 
 				acc[type] = {
