@@ -57,7 +57,7 @@ function validateSchema(json, position, currentSchema = this.schema) {
 		return;
 	}
 
-	if (currentSchema.type === "number") {
+	if (currentSchema.type === "number" || currentSchema.type === "integer") {
 		if (typeof json !== "number") {
 			this.error(`"${json}" should be number`, "type", position);
 			return;
