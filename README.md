@@ -1,6 +1,12 @@
 # esjson
 JSON Schema validator (cli)
 
+![CI](https://img.shields.io/github/workflow/status/Marcisbee/esjson/CI?style=flat-square)
+[![npm version](https://img.shields.io/npm/v/esjson.svg?style=flat-square)](https://www.npmjs.com/package/esjson)
+[![npm downloads](https://img.shields.io/npm/dm/esjson.svg?style=flat-square)](https://www.npmjs.com/package/esjson)
+[![gzip bundle size](https://img.shields.io/bundlephobia/minzip/esjson?style=flat-square)](https://bundlephobia.com/result?p=esjson)
+
+
 ## Command line interface
 Install esjson with npm to use the command line interface:
 
@@ -27,6 +33,12 @@ Options:
    -e, --extensions         array of file paths to include (default: *.json)
    -a, --allow              rules for definitions and keys to allow (example: additionalProperties:name:MyDefinition)
 ```
+
+# Motivation
+
+Some of the already existing tools were not good enough for my use case (e.g. validating large list of definitions and returning quite specific errors was impossible with other json schema validators out there). So I just built my own. It does not fully comply with spec __yet__, but I'm planning to add features from spec as the time goes!
+
+Also there is little to none documentation. If you really want to use this tool, then open an issue requesting detailed documentation, I'll see what I can put together.
 
 # MIT License
 Copyright (C) 2020 Marcis Bergmanis
