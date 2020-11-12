@@ -28,7 +28,7 @@ function validateSchema(json, position, currentSchema = this.schema) {
 	}
 
 	if (currentSchema.type === "object") {
-		if (!json || typeof json !== "object") {
+		if (!json || typeof json !== "object" || Array.isArray(json)) {
 			this.error('Incorrect type. Expected "object".', "type", position);
 			return;
 		}
