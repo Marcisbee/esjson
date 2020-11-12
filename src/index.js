@@ -14,11 +14,18 @@ const defaultConfig = {
 };
 
 /**
+ * @typedef Ref
+ * @property {string} key
+ * @property {string} definition
+ */
+
+/**
  * @typedef Context
  * @property {(json: *, position: (string | number)[], currentSchema?: *) => void} validateSchema
- * @property {(message: string, code: string, position: (string | number)[]) => (import('./diagnostics/error') | Warning | Error)} error
+ * @property {(message: string, code: string, position: (string | number)[], ref?: Ref) => (import('./diagnostics/error') | Warning | Error)} error
  * @property {(import('./diagnostics/error') | Warning | Diagnostics | Error)[]} errors
  * @property {Record<string, any>} schema
+ * @property {Record<string, any>} config
  * @property {string} filePath
  * @property {boolean=} shallow
  */
@@ -29,11 +36,13 @@ function validator() {
     '--version': Boolean,
     '--schema': String,
     '--extensions': [String],
+    '--allow': [String],
 
     // Aliases
     '-v': '--version',
     '-s': '--schema',
-    '-e': '--extensions'
+    '-e': '--extensions',
+    '-a': '--allow'
   });
 
   if (args['--version']) {
@@ -45,6 +54,37 @@ function validator() {
   const userConfig = {};
   if (args['--extensions']) {
     userConfig.extensions = args['--extensions'];
+  }
+
+  if (args['--allow']) {
+    userConfig.allow = args['--allow'].reduce((acc, rule) => {
+      const [title, type, name] = rule.split(':');
+
+      if (!rule) {
+        throw new Error('Empty `allow` option provided');
+      }
+
+      if (!title) {
+        throw new Error('First parameter is not defined in `allow` option');
+      }
+
+      if (!type) {
+        throw new Error('Second parameter is not defined in `allow` option');
+      }
+
+      if (!type) {
+        throw new Error('Third parameter is not defined in `allow` option');
+      }
+
+      console.log(`Allowing "${name}" to pass "${type}" on "${title}"`);
+
+      acc[type] = {
+        ...acc[type],
+        [name]: title
+      };
+
+      return acc;
+    }, {});
   }
 
   const rootPathRelative = args._[0] || '.';
@@ -75,7 +115,7 @@ function validator() {
         process.stdout.write(`\r\x1b[KEvaluating ${printPath}...`);
 
         try {
-          validate(filePath, read(), schema);
+          validate(filePath, read(), schema, userConfig);
           diagnostics.pass.push(filePath);
         } catch (e) {
           if (Array.isArray(e)) {
@@ -116,7 +156,7 @@ function validator() {
   }
 
   process.stdout.write('\r\x1b[K');
-  console.log(report(new Warning(`No json files found in directory "${rootPath}"\n`, [])));
+  console.log(report(new Warning(`No json files found in directory "${rootPath}"\n`, 'not-found', [])));
 }
 
 module.exports = validator;

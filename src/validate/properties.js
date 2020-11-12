@@ -13,7 +13,15 @@ function validateProperties(object, currentSchema, position) {
     const properties = currentSchema.properties[key];
     if (properties === undefined) {
       if (!this.shallow && !currentSchema.additionalProperties) {
-        this.error(`Property "${key}" is not allowed`, 'additionalProperties', position);
+        this.error(
+          `Property "${key}" is not allowed`,
+          'additionalProperties',
+          position,
+          {
+            key,
+            definition: currentSchema.title
+          }
+        );
       }
 
       continue;
