@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 const jsonPointer = require("../json-pointer");
 
 const validateProperties = require("./properties");

@@ -1,4 +1,4 @@
-class ValidationError extends Error {
+class ValidationError {
 	/**
    * @param {string} message
    * @param {string} code
@@ -6,8 +6,7 @@ class ValidationError extends Error {
    * @param {string=} filePath
    */
 	constructor(message, code, position = [], filePath = null) {
-		super(message);
-
+		this.message = message;
 		this.position = position;
 		this.code = code;
 		this.path = filePath;

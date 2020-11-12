@@ -1,4 +1,3 @@
-/* eslint-disable max-params */
 const ValidationError = require("./diagnostics/error");
 const Warning = require("./diagnostics/warning");
 const validateSchema = require("./validate/schema");

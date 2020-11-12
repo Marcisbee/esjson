@@ -2,104 +2,79 @@ const {test} = require("uvu");
 const assert = require("uvu/assert");
 
 const ValidationError = require("../src/diagnostics/error");
-const validate = require("../src/validate");
-
-const {throws} = require("./utils");
+const output = require("../src/output");
 
 const schema = {type: "string"};
 const userConfig = {};
 
-test(
-	'"asd"',
-	() => {
-		assert.not.throws(() => {
-			validate("file.json", '"asd"', schema, userConfig);
-		});
-	},
-);
+test("\"asd\"", () => {
+	const errors = output("\"asd\"", schema, userConfig);
+	const expectation = [];
 
-test(
-	"null",
-	() => {
-		throws(
-			() => {
-				validate("file.json", "null", schema, userConfig);
-			},
-			[new ValidationError('"null" should be string', "type")],
-		);
-	},
-);
+	assert.equal(errors, expectation);
+});
 
-test(
-	"0",
-	() => {
-		throws(
-			() => {
-				validate("file.json", "0", schema, userConfig);
-			},
-			[new ValidationError('"0" should be string', "type")],
-		);
-	},
-);
+test("null", () => {
+	const errors = output("null", schema, userConfig);
+	const expectation = [
+		new ValidationError('"null" should be string', "type")
+	];
 
-test(
-	"123",
-	() => {
-		throws(
-			() => {
-				validate("file.json", "123", schema, userConfig);
-			},
-			[new ValidationError('"123" should be string', "type")],
-		);
-	},
-);
+	assert.equal(errors, expectation);
+});
 
-test(
-	"false",
-	() => {
-		throws(
-			() => {
-				validate("file.json", "false", schema, userConfig);
-			},
-			[new ValidationError('"false" should be string', "type")],
-		);
-	},
-);
+test("0", () => {
+	const errors = output("0", schema, userConfig);
+	const expectation = [
+		new ValidationError('"0" should be string', "type")
+	];
 
-test(
-	"true",
-	() => {
-		throws(
-			() => {
-				validate("file.json", "true", schema, userConfig);
-			},
-			[new ValidationError('"true" should be string', "type")],
-		);
-	},
-);
+	assert.equal(errors, expectation);
+});
 
-test(
-	"[]",
-	() => {
-		throws(
-			() => {
-				validate("file.json", "[]", schema, userConfig);
-			},
-			[new ValidationError('"" should be string', "type")],
-		);
-	},
-);
+test("123", () => {
+	const errors = output("123", schema, userConfig);
+	const expectation = [
+		new ValidationError('"123" should be string', "type")
+	];
 
-test(
-	"{}",
-	() => {
-		throws(
-			() => {
-				validate("file.json", "{}", schema, userConfig);
-			},
-			[new ValidationError('"[object Object]" should be string', "type")],
-		);
-	},
-);
+	assert.equal(errors, expectation);
+});
+
+test("false", () => {
+	const errors = output("false", schema, userConfig);
+	const expectation = [
+		new ValidationError('"false" should be string', "type")
+	];
+
+	assert.equal(errors, expectation);
+});
+
+test("true", () => {
+	const errors = output("true", schema, userConfig);
+	const expectation = [
+		new ValidationError('"true" should be string', "type")
+	];
+
+	assert.equal(errors, expectation);
+});
+
+test("[]", () => {
+	const errors = output("[]", schema, userConfig);
+	const expectation = [
+		new ValidationError('"" should be string', "type")
+	];
+
+	assert.equal(errors, expectation);
+});
+
+test("{}", () => {
+	const errors = output("{}", schema, userConfig);
+	const expectation = [
+		new ValidationError('"[object Object]" should be string', "type")
+	];
+
+	assert.equal(errors, expectation);
+});
 
 test.run();
