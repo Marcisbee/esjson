@@ -22,10 +22,10 @@ function validate(filePath, fileContents, schema, config, position = []) {
 		error(message, code, pos, ref) {
 			if (
 				ref &&
-				ref.definition &&
 				this.config.allow &&
 				this.config.allow[code] &&
-				this.config.allow[code][ref.key] === ref.definition
+				((ref.definition && this.config.allow[code][ref.key] === ref.definition) ||
+				this.config.allow[code][ref.key] === true)
 			) {
 				const warning = new Warning(message, code, pos);
 

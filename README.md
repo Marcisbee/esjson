@@ -25,7 +25,7 @@ Options:
    -v, --version            print version and exit
    -s, --schema             validate json according to schema
    -e, --extensions         array of file paths to include (default: *.json)
-   -a, --allow              rules for definitions and keys to allow (example: MyDefinition:additionalProperties:name)
+   -a, --allow              rules for definitions and keys to allow (example: additionalProperties:name:MyDefinition)
 ```
 
 # MIT License

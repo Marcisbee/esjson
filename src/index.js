@@ -58,14 +58,10 @@ function validator() {
 	if (args["--allow"]) {
 		userConfig.allow = args["--allow"].reduce(
 			(acc, rule) => {
-				const [title, type, name] = rule.split(":");
+				const [type, name, title] = rule.split(":");
 
 				if (!rule) {
 					throw new Error("Empty `allow` option provided");
-				}
-
-				if (!title) {
-					throw new Error("First parameter is not defined in `allow` option");
 				}
 
 				if (!type) {
@@ -76,15 +72,23 @@ function validator() {
 					throw new Error("Third parameter is not defined in `allow` option");
 				}
 
-				console.log(
-					yellow(
-						`${bold("!")} Allowing "${name}" to pass ${type} on "${title}"`,
-					),
-				);
+				if (title) {
+					console.log(
+						yellow(
+							`${bold("!")} Allowing "${name}" to pass ${type} on "${title}"`,
+						),
+					);
+				} else {
+					console.log(
+						yellow(
+							`${bold("!")} Allowing "${name}" to pass ${type} on every definition`,
+						),
+					);
+				}
 
 				acc[type] = {
 					...acc[type],
-					[name]: title,
+					[name]: title || true,
 				};
 
 				return acc;
@@ -125,7 +129,7 @@ function validator() {
 							? `...${pathEnding}`
 							: pathEnding;
 
-					process.stdout.write(`\r\x1b[KEvaluating ${printPath}...`);
+					process.stdout.write(`\r\x1b[KEvaluating ${printPath}`);
 
 					try {
 						validate(filePath, read(), schema, userConfig);
