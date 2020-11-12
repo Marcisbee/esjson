@@ -16,7 +16,6 @@ function validateRequired(object, currentSchema, position) {
 					definition: currentSchema.title,
 				},
 			);
-			return;
 		}
 	}
 }
