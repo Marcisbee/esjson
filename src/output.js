@@ -9,7 +9,7 @@ const validate = require("./validate");
 function output(fileContents, schema, config) {
 	try {
 		validate(null, fileContents, schema, config);
-	} catch(errors) {
+	} catch (errors) {
 		return errors;
 	}
 
