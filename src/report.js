@@ -1,4 +1,4 @@
-const {dim, yellow, red, bold, green} = require("colorette");
+const {dim, yellow, red, bold, green, blue} = require("colorette");
 
 const Diagnostics = require("./diagnostics/diagnostics");
 const ValidationError = require("./diagnostics/error");
@@ -27,17 +27,22 @@ function report(params) {
 	}
 
 	if (params instanceof Diagnostics) {
+		const passedLength = params.diagnostics.pass.length;
 		const problemsLength = params.diagnostics.errors.length;
 		const warningsLength = params.diagnostics.errors.filter((error) =>
 			error instanceof Warning
 		).length;
 		const errorsLength = problemsLength - warningsLength;
 
+		const passed = plural(passedLength, "file", "files");
+
 		if (errorsLength > 0) {
 			const problems = plural(problemsLength, "problem", "problems");
 			const errors = plural(errorsLength, "error", "errors");
 			const warnings = plural(warningsLength, "warning", "warnings");
 			const summary =
+				"\n" +
+				blue(`ℹ ${passed} passed`) +
 				"\n" +
 				bold(red(`✖ ${problems} (${errors}, ${yellow(warnings)})`)) +
 				"\n\n";
@@ -54,7 +59,12 @@ function report(params) {
 
 		if (warningsLength > 0) {
 			const warnings = plural(warningsLength, "warning", "warnings");
-			const summary = "\n" + bold(yellow(`⚠ ${warnings}`)) + "\n\n";
+			const summary =
+				"\n" +
+				blue(`ℹ ${passed} passed`) +
+				"\n" +
+				bold(yellow(`⚠ ${warnings}`)) +
+				"\n\n";
 			const reportChunks = Object.entries(params.groupedProblems).map((
 				[key, errors],
 			) => {
@@ -67,7 +77,11 @@ function report(params) {
 		}
 
 		process.stdout.write(
-			"\n" + bold(green("\u2714 No problems found")) + "\n\n",
+			"\n" +
+			blue(`ℹ ${passed} validated`) +
+			"\n" +
+			bold(green("\u2714 No knowns problems!")) +
+			"\n\n",
 		);
 		process.exit(0);
 	}
