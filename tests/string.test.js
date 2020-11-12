@@ -7,14 +7,14 @@ const output = require("../src/output");
 const schema = {type: "string"};
 const userConfig = {};
 
-test("\"asd\"", () => {
+test("passes with \"asd\"", () => {
 	const errors = output("\"asd\"", schema, userConfig);
 	const expectation = [];
 
 	assert.equal(errors, expectation);
 });
 
-test("null", () => {
+test("throws error with null", () => {
 	const errors = output("null", schema, userConfig);
 	const expectation = [
 		new ValidationError('"null" should be string', "type")
@@ -23,7 +23,7 @@ test("null", () => {
 	assert.equal(errors, expectation);
 });
 
-test("0", () => {
+test("throws error with 0", () => {
 	const errors = output("0", schema, userConfig);
 	const expectation = [
 		new ValidationError('"0" should be string', "type")
@@ -32,7 +32,7 @@ test("0", () => {
 	assert.equal(errors, expectation);
 });
 
-test("123", () => {
+test("throws error with 123", () => {
 	const errors = output("123", schema, userConfig);
 	const expectation = [
 		new ValidationError('"123" should be string', "type")
@@ -41,7 +41,7 @@ test("123", () => {
 	assert.equal(errors, expectation);
 });
 
-test("false", () => {
+test("throws error with false", () => {
 	const errors = output("false", schema, userConfig);
 	const expectation = [
 		new ValidationError('"false" should be string', "type")
@@ -50,7 +50,7 @@ test("false", () => {
 	assert.equal(errors, expectation);
 });
 
-test("true", () => {
+test("throws error with true", () => {
 	const errors = output("true", schema, userConfig);
 	const expectation = [
 		new ValidationError('"true" should be string', "type")
@@ -59,7 +59,7 @@ test("true", () => {
 	assert.equal(errors, expectation);
 });
 
-test("[]", () => {
+test("throws error with []", () => {
 	const errors = output("[]", schema, userConfig);
 	const expectation = [
 		new ValidationError('"" should be string', "type")
@@ -68,7 +68,7 @@ test("[]", () => {
 	assert.equal(errors, expectation);
 });
 
-test("{}", () => {
+test("throws error with {}", () => {
 	const errors = output("{}", schema, userConfig);
 	const expectation = [
 		new ValidationError('"[object Object]" should be string', "type")

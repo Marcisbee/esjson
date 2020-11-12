@@ -7,21 +7,21 @@ const output = require("../src/output");
 const schema = {type: "number"};
 const userConfig = {};
 
-test("0", () => {
+test("passes with 0", () => {
 	const errors = output("0", schema, userConfig);
 	const expectation = [];
 
 	assert.equal(errors, expectation);
 });
 
-test("123", () => {
+test("passes with 123", () => {
 	const errors = output("123", schema, userConfig);
 	const expectation = [];
 
 	assert.equal(errors, expectation);
 });
 
-test("null", () => {
+test("throws error with null", () => {
 	const errors = output("null", schema, userConfig);
 	const expectation = [
 		new ValidationError('"null" should be number', "type")
@@ -30,7 +30,7 @@ test("null", () => {
 	assert.equal(errors, expectation);
 });
 
-test("\"asd\"", () => {
+test("throws error with \"asd\"", () => {
 	const errors = output("\"asd\"", schema, userConfig);
 	const expectation = [
 		new ValidationError('"asd" should be number', "type")
@@ -39,7 +39,7 @@ test("\"asd\"", () => {
 	assert.equal(errors, expectation);
 });
 
-test("false", () => {
+test("throws error with false", () => {
 	const errors = output("false", schema, userConfig);
 	const expectation = [
 		new ValidationError('"false" should be number', "type")
@@ -48,7 +48,7 @@ test("false", () => {
 	assert.equal(errors, expectation);
 });
 
-test("true", () => {
+test("throws error with true", () => {
 	const errors = output("true", schema, userConfig);
 	const expectation = [
 		new ValidationError('"true" should be number', "type")
@@ -57,7 +57,7 @@ test("true", () => {
 	assert.equal(errors, expectation);
 });
 
-test("[]", () => {
+test("throws error with []", () => {
 	const errors = output("[]", schema, userConfig);
 	const expectation = [
 		new ValidationError('"" should be number', "type")
@@ -66,7 +66,7 @@ test("[]", () => {
 	assert.equal(errors, expectation);
 });
 
-test("{}", () => {
+test("throws error with {}", () => {
 	const errors = output("{}", schema, userConfig);
 	const expectation = [
 		new ValidationError('"[object Object]" should be number', "type")

@@ -7,21 +7,21 @@ const output = require("../src/output");
 const schema = {type: "boolean"};
 const userConfig = {};
 
-test("true", () => {
+test("passes with true", () => {
 	const errors = output("true", schema, userConfig);
 	const expectation = [];
 
 	assert.equal(errors, expectation);
 });
 
-test("false", () => {
+test("passes with false", () => {
 	const errors = output("false", schema, userConfig);
 	const expectation = [];
 
 	assert.equal(errors, expectation);
 });
 
-test("null", () => {
+test("throws error with null", () => {
 	const errors = output("null", schema, userConfig);
 	const expectation = [
 		new ValidationError('"null" should be boolean', "type")
@@ -30,7 +30,7 @@ test("null", () => {
 	assert.equal(errors, expectation);
 });
 
-test("\"asd\"", () => {
+test("throws error with \"asd\"", () => {
 	const errors = output("\"asd\"", schema, userConfig);
 	const expectation = [
 		new ValidationError('"asd" should be boolean', "type")
@@ -39,7 +39,7 @@ test("\"asd\"", () => {
 	assert.equal(errors, expectation);
 });
 
-test("0", () => {
+test("throws error with 0", () => {
 	const errors = output("0", schema, userConfig);
 	const expectation = [
 		new ValidationError('"0" should be boolean', "type")
@@ -48,7 +48,7 @@ test("0", () => {
 	assert.equal(errors, expectation);
 });
 
-test("123", () => {
+test("throws error with 123", () => {
 	const errors = output("123", schema, userConfig);
 	const expectation = [
 		new ValidationError('"123" should be boolean', "type")
@@ -57,7 +57,7 @@ test("123", () => {
 	assert.equal(errors, expectation);
 });
 
-test("[]", () => {
+test("throws error with []", () => {
 	const errors = output("[]", schema, userConfig);
 	const expectation = [
 		new ValidationError('"" should be boolean', "type")
@@ -66,7 +66,7 @@ test("[]", () => {
 	assert.equal(errors, expectation);
 });
 
-test("{}", () => {
+test("throws error with {}", () => {
 	const errors = output("{}", schema, userConfig);
 	const expectation = [
 		new ValidationError('"[object Object]" should be boolean', "type")
