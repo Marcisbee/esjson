@@ -47,7 +47,7 @@ test("passes with all valid properties", () => {
 	assert.equal(errors, []);
 });
 
-test("throws error with valid productId", () => {
+test("throws error with invalid productId", () => {
 	const errors = output('{"productId": null}', schema, userConfig);
 
 	assert.equal(errors, [
@@ -55,10 +55,19 @@ test("throws error with valid productId", () => {
 	]);
 });
 
-test("throws error with valid productId", () => {
+test("throws error with invalid productId", () => {
 	const errors = output('{"productName": null}', schema, userConfig);
 
 	assert.equal(errors, [
+		new ValidationError('"null" should be string', "type", ["productName"])
+	]);
+});
+
+test("throws error with all invalid properties", () => {
+	const errors = output('{"productId": null, "productName": null}', schema, userConfig);
+
+	assert.equal(errors, [
+		new ValidationError('"null" should be number', "type", ["productId"]),
 		new ValidationError('"null" should be string', "type", ["productName"])
 	]);
 });
