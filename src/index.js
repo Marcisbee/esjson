@@ -1,16 +1,15 @@
-const arg = require('arg');
-const {resolve} = require('path');
+const arg = require("arg");
+const {yellow} = require("colorette");
+const {resolve} = require("path");
 
-const {directory} = require('./directory');
-const Warning = require('./diagnostics/warning');
-const Diagnostics = require('./diagnostics/diagnostics');
-const report = require('./report');
-const validate = require('./validate');
+const {directory} = require("./directory");
+const Warning = require("./diagnostics/warning");
+const Diagnostics = require("./diagnostics/diagnostics");
+const report = require("./report");
+const validate = require("./validate");
 
 const defaultConfig = {
-  extensions: [
-    '*.json'
-  ]
+	extensions: ["*.json"],
 };
 
 /**
@@ -31,132 +30,154 @@ const defaultConfig = {
  */
 
 function validator() {
-  const args = arg({
-    // Types
-    '--version': Boolean,
-    '--schema': String,
-    '--extensions': [String],
-    '--allow': [String],
+	const args = arg({
+		// Types
+		"--version": Boolean,
+		"--schema": String,
+		"--extensions": [String],
+		"--allow": [String],
 
-    // Aliases
-    '-v': '--version',
-    '-s': '--schema',
-    '-e': '--extensions',
-    '-a': '--allow'
-  });
+		// Aliases
+		"-v": "--version",
+		"-s": "--schema",
+		"-e": "--extensions",
+		"-a": "--allow",
+	});
 
-  if (args['--version']) {
-    const packageJson = require('../package.json');
-    console.log(`v${packageJson.version}`);
-    process.exit(0);
-  }
+	if (args["--version"]) {
+		const packageJson = require("../package.json");
+		console.log(`v${packageJson.version}`);
+		process.exit(0);
+	}
 
-  const userConfig = {};
-  if (args['--extensions']) {
-    userConfig.extensions = args['--extensions'];
-  }
+	const userConfig = {};
+	if (args["--extensions"]) {
+		userConfig.extensions = args["--extensions"];
+	}
 
-  if (args['--allow']) {
-    userConfig.allow = args['--allow'].reduce((acc, rule) => {
-      const [title, type, name] = rule.split(':');
+	if (args["--allow"]) {
+		userConfig.allow = args["--allow"].reduce(
+			(acc, rule) => {
+				const [title, type, name] = rule.split(":");
 
-      if (!rule) {
-        throw new Error('Empty `allow` option provided');
-      }
+				if (!rule) {
+					throw new Error("Empty `allow` option provided");
+				}
 
-      if (!title) {
-        throw new Error('First parameter is not defined in `allow` option');
-      }
+				if (!title) {
+					throw new Error("First parameter is not defined in `allow` option");
+				}
 
-      if (!type) {
-        throw new Error('Second parameter is not defined in `allow` option');
-      }
+				if (!type) {
+					throw new Error("Second parameter is not defined in `allow` option");
+				}
 
-      if (!type) {
-        throw new Error('Third parameter is not defined in `allow` option');
-      }
+				if (!type) {
+					throw new Error("Third parameter is not defined in `allow` option");
+				}
 
-      console.log(`Allowing "${name}" to pass "${type}" on "${title}"`);
+				console.log(
+					yellow(`Allowing "${name}" to pass "${type}" on "${title}"`),
+				);
 
-      acc[type] = {
-        ...acc[type],
-        [name]: title
-      };
+				acc[type] = {
+					...acc[type],
+					[name]: title,
+				};
 
-      return acc;
-    }, {});
-  }
+				return acc;
+			},
+			{},
+		);
+	}
 
-  const rootPathRelative = args._[0] || '.';
-  const rootPath = resolve(rootPathRelative);
+	const rootPathRelative = args._[0] || ".";
+	const rootPath = resolve(rootPathRelative);
 
-  if (!args['--schema']) {
-    console.log('Missing option: --schema');
-    process.exit(1);
-  }
+	if (!args["--schema"]) {
+		console.log("Missing option: --schema");
+		process.exit(1);
+	}
 
-  const schema = require(require.resolve(args['--schema'], {paths: [resolve('.')]}));
+	const schema = require(
+		require.resolve(args["--schema"], {paths: [resolve(".")]}),
+	);
 
-  const diagnostics = {
-    pass: [],
-    errors: []
-  };
-  const queue = [];
-  const config = {...defaultConfig, ...userConfig};
+	const diagnostics = {
+		pass: [],
+		errors: [],
+	};
+	const queue = [];
+	const config = {...defaultConfig, ...userConfig};
 
-  process.stdout.write('\r\x1b[KFetching json files...');
+	process.stdout.write("\r\x1b[KFetching json files...");
 
-  try {
-    directory(rootPath, (filePath, read) => {
-      queue.push(() => {
-        const pathEnding = filePath.slice(-60);
-        const printPath = pathEnding.length < filePath.length ? `...${pathEnding}` : pathEnding;
+	try {
+		directory(
+			rootPath,
+			(filePath, read) => {
+				queue.push(() => {
+					const pathEnding = filePath.slice(-60);
+					const printPath =
+						pathEnding.length < filePath.length
+							? `...${pathEnding}`
+							: pathEnding;
 
-        process.stdout.write(`\r\x1b[KEvaluating ${printPath}...`);
+					process.stdout.write(`\r\x1b[KEvaluating ${printPath}...`);
 
-        try {
-          validate(filePath, read(), schema, userConfig);
-          diagnostics.pass.push(filePath);
-        } catch (e) {
-          if (Array.isArray(e)) {
-            diagnostics.errors.push(
-              ...e.map(error => {
-                error.path = filePath;
-                return error;
-              })
-            );
-          } else {
-            e.path = filePath;
-            diagnostics.errors.push(e);
-          }
-        }
+					try {
+						validate(filePath, read(), schema, userConfig);
+						diagnostics.pass.push(filePath);
+					} catch (e) {
+						if (Array.isArray(e)) {
+							diagnostics.errors.push(
+								...e.map((error) => {
+									error.path = filePath;
+									return error;
+								}),
+							);
+						} else {
+							e.path = filePath;
+							diagnostics.errors.push(e);
+						}
+					}
 
-        const next = queue.shift();
+					const next = queue.shift();
 
-        if (typeof next === 'function') {
-          next();
-        }
-      });
-    }, {
-      include: config.extensions
-    });
-  } catch (_) {
-    // Just skip
-  }
+					if (typeof next === "function") {
+						next();
+					}
+				});
+			},
+			{
+				include: config.extensions,
+			},
+		);
+	} catch (_) {
+		// Just skip
+	}
 
-  const fn = queue.shift();
+	const fn = queue.shift();
 
-  if (typeof fn === 'function') {
-    fn();
+	if (typeof fn === "function") {
+		fn();
 
-    process.stdout.write('\r\x1b[K');
-    report(new Diagnostics(diagnostics));
+		process.stdout.write("\r\x1b[K");
+		report(new Diagnostics(diagnostics));
 
-    return;
-  }
+		return;
+	}
 
-  process.stdout.write('\r\x1b[K');
-  console.log(report(new Warning(`No json files found in directory "${rootPath}"\n`, 'not-found', [])));
+	process.stdout.write("\r\x1b[K");
+	console.log(
+		report(
+			new Warning(
+				`No json files found in directory "${rootPath}"\n`,
+				"not-found",
+				[],
+			),
+		),
+	);
 }
 
 module.exports = validator;

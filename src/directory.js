@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 /**
  * List all files in a directory recursively in a synchronous fashion
@@ -7,26 +7,22 @@ const path = require('path');
  * @param {String} dir
  * @returns {IterableIterator<String>}
  */
-function * walkSync(dir) {
-  const files = fs.readdirSync(dir);
+function* walkSync(dir) {
+	const files = fs.readdirSync(dir);
 
-  for (const file of files) {
-    const pathToFile = path.join(dir, file);
-    const isDirectory = fs.statSync(pathToFile).isDirectory();
-    if (isDirectory) {
-      yield * walkSync(pathToFile);
-    } else {
-      yield pathToFile;
-    }
-  }
+	for (const file of files) {
+		const pathToFile = path.join(dir, file);
+		const isDirectory = fs.statSync(pathToFile).isDirectory();
+		if (isDirectory) {
+			yield* walkSync(pathToFile);
+		} else {
+			yield pathToFile;
+		}
+	}
 }
 
-const includeDefaults = [
-  '*.json'
-];
-const excludeDefaults = [
-  'node_modules/**'
-];
+const includeDefaults = ["*.json"];
+const excludeDefaults = ["node_modules/**"];
 
 /**
  * @param {string} filePath
@@ -34,19 +30,19 @@ const excludeDefaults = [
  * @return {boolean}
  */
 function isInRuleset(filePath, rules) {
-  for (const rule of rules) {
-    const normalRule = rule
-      .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
-      .replace(/\*\*/g, '.+')
-      .replace(/\*/g, '[^\\/]*');
-    const expression = new RegExp(`${normalRule}$`);
+	for (const rule of rules) {
+		const normalRule = rule.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(
+			/\*\*/g,
+			".+",
+		).replace(/\*/g, "[^\\/]*");
+		const expression = new RegExp(`${normalRule}$`);
 
-    if (expression.test(filePath)) {
-      return true;
-    }
-  }
+		if (expression.test(filePath)) {
+			return true;
+		}
+	}
 
-  return false;
+	return false;
 }
 
 /**
@@ -55,18 +51,18 @@ function isInRuleset(filePath, rules) {
  * @param {{ include?: string[], exclude?: string[] }} options
  */
 function directory(
-  absolutePath,
-  traverse,
-  {include = includeDefaults, exclude = excludeDefaults} = {}
+	absolutePath,
+	traverse,
+	{include = includeDefaults, exclude = excludeDefaults} = {},
 ) {
-  for (const file of walkSync(absolutePath)) {
-    const excluded = isInRuleset(file, exclude);
-    const included = isInRuleset(file, include);
+	for (const file of walkSync(absolutePath)) {
+		const excluded = isInRuleset(file, exclude);
+		const included = isInRuleset(file, include);
 
-    if (!excluded && included) {
-      traverse(file, () => fs.readFileSync(file).toString());
-    }
-  }
+		if (!excluded && included) {
+			traverse(file, () => fs.readFileSync(file).toString());
+		}
+	}
 }
 
 module.exports = {directory};

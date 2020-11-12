@@ -1,0 +1,8 @@
+// For configuration documentation see http://romefrontend.dev/#project-configuration
+name: "esjson"
+lint: {
+	ignore: [
+		"tests"
+]
+}
+root: true

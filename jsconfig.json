@@ -1,24 +1,24 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
-    "module": "commonJS",
-    "moduleResolution": "node",
-    "checkJs": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
-  },
-  "exclude": [
-    "coverage",
-    "**/*.test.js",
-    "node_modules",
-    "./node_modules",
-    "./node_modules/*"
-  ]
+	"compilerOptions": {
+		"baseUrl": ".",
+		"lib": [
+			"es2017",
+			"dom"
+		],
+		"module": "commonJS",
+		"moduleResolution": "node",
+		"checkJs": true,
+		"noImplicitThis": true,
+		"alwaysStrict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true
+	},
+	"exclude": [
+		"coverage",
+		"**/*.test.js",
+		"node_modules",
+		"./node_modules",
+		"./node_modules/*"
+	]
 }

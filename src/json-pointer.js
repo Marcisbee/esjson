@@ -4,13 +4,13 @@
  * @returns {*}
  */
 function jsonPointer(source, path) {
-  let output = source;
+	let output = source;
 
-  for (const key of path) {
-    output = output[key];
-  }
+	for (const key of path) {
+		output = output[key];
+	}
 
-  return output;
+	return output;
 }
 
 module.exports = jsonPointer;
