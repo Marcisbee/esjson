@@ -9,7 +9,8 @@ const report = require("./report");
 const validate = require("./validate");
 
 const defaultConfig = {
-	extensions: ["*.json"],
+	include: ["*.json"],
+	exclude: ["node_modules/**"],
 };
 
 /**
@@ -34,13 +35,15 @@ function validator() {
 		// Types
 		"--version": Boolean,
 		"--schema": String,
-		"--extensions": [String],
+		"--include": [String],
+		"--exclude": [String],
 		"--allow": [String],
 
 		// Aliases
 		"-v": "--version",
 		"-s": "--schema",
-		"-e": "--extensions",
+		"-i": "--include",
+		"-e": "--exclude",
 		"-a": "--allow",
 	});
 
@@ -51,8 +54,8 @@ function validator() {
 	}
 
 	const userConfig = {};
-	if (args["--extensions"]) {
-		userConfig.extensions = args["--extensions"];
+	if (args["--include"]) {
+		userConfig.include = args["--include"];
 	}
 
 	if (args["--allow"]) {
@@ -156,7 +159,7 @@ function validator() {
 				});
 			},
 			{
-				include: config.extensions,
+				include: config.include,
 			},
 		);
 	} catch (_) {
