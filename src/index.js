@@ -58,6 +58,10 @@ function validator() {
 		userConfig.include = args["--include"];
 	}
 
+	if (args["--exclude"]) {
+		userConfig.exclude = args["--exclude"];
+	}
+
 	if (args["--allow"]) {
 		userConfig.allow = args["--allow"].reduce(
 			(acc, rule) => {
@@ -160,6 +164,7 @@ function validator() {
 			},
 			{
 				include: config.include,
+				exclude: config.exclude,
 			},
 		);
 	} catch (_) {

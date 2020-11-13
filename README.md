@@ -31,6 +31,7 @@ Options:
    -v, --version            print version and exit
    -s, --schema             validate json according to schema
    -i, --include            array of file paths to include (default: *.json)
+   -e, --exclude            array of file paths to exclude (default: node_modules/**)
    -a, --allow              rules for definitions and keys to allow (example: additionalProperties:name:MyDefinition)
 ```
 
