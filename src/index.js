@@ -11,6 +11,7 @@ const validate = require("./validate");
 const defaultConfig = {
 	include: ["*.json"],
 	exclude: ["node_modules/**"],
+	empty: [],
 };
 
 /**
@@ -38,6 +39,7 @@ function validator() {
 		"--include": [String],
 		"--exclude": [String],
 		"--allow": [String],
+		"--empty": [String],
 
 		// Aliases
 		"-v": "--version",
@@ -60,6 +62,10 @@ function validator() {
 
 	if (args["--exclude"]) {
 		userConfig.exclude = args["--exclude"];
+	}
+
+	if (args["--empty"]) {
+		userConfig.empty = args["--empty"];
 	}
 
 	if (args["--allow"]) {

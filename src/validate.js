@@ -1,5 +1,6 @@
 const ValidationError = require("./diagnostics/error");
 const Warning = require("./diagnostics/warning");
+const isInRuleset = require("./utils/is-in-ruleset");
 const validateSchema = require("./validate/schema");
 
 /**
@@ -11,6 +12,16 @@ const validateSchema = require("./validate/schema");
  */
 function validate(filePath, fileContents, schema, config, position = []) {
 	const json = JSON.parse(fileContents);
+	const isEmpty =
+		!fileContents.trim() || (json && Object.keys(json).length === 0);
+
+	if (filePath && isEmpty) {
+		const allowedToBeEmpty = isInRuleset(filePath, config.empty || []);
+		if (allowedToBeEmpty) {
+			return;
+		}
+	}
+
 	/** @type {import("src").Context}*/
 	const context = {
 		validateSchema,

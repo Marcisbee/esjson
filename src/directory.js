@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const isInRuleset = require("./utils/is-in-ruleset");
+
 /**
  * List all files in a directory recursively in a synchronous fashion
  *
@@ -23,27 +25,6 @@ function* walkSync(dir) {
 
 const includeDefaults = ["*.json"];
 const excludeDefaults = ["node_modules/**"];
-
-/**
- * @param {string} filePath
- * @param {string[]} rules
- * @return {boolean}
- */
-function isInRuleset(filePath, rules) {
-	for (const rule of rules) {
-		const normalRule = rule.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(
-			/\*\*/g,
-			".+",
-		).replace(/\*/g, "[^\\/]*");
-		const expression = new RegExp(`${normalRule}$`);
-
-		if (expression.test(filePath)) {
-			return true;
-		}
-	}
-
-	return false;
-}
 
 /**
  * @param {string} absolutePath
