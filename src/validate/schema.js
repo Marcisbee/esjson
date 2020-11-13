@@ -14,6 +14,14 @@ const validateAnyOf = require("./anyOf");
  */
 // @ts-ignore
 function validateSchema(json, position, currentSchema = this.schema) {
+	if (
+		typeof currentSchema === "number" ||
+		typeof currentSchema === "string" ||
+		!currentSchema
+	) {
+		throw new Error("Invalid schema");
+	}
+
 	if (currentSchema.type === "array") {
 		if (!Array.isArray(json)) {
 			this.error('Incorrect type. Expected "array".', "type", position);
@@ -83,19 +91,39 @@ function validateSchema(json, position, currentSchema = this.schema) {
 		return;
 	}
 
+	if (currentSchema.type === "null") {
+		if (json !== null) {
+			this.error(`"${json}" should be null`, "type", position);
+			return;
+		}
+
+		return;
+	}
+
 	if (Array.isArray(currentSchema.type)) {
-		for (const typeSchema of currentSchema.type) {
+		let errorCount = 0;
+		for (const type of currentSchema.type) {
 			try {
 				validateSchema.call(
 					{...this, shallow: true},
 					json,
 					position,
-					typeSchema,
+					{
+						type,
+					},
 				);
 				return;
-			} catch {
-				// Ignore this error
+			} catch (e) {
+				errorCount++;
 			}
+		}
+
+		if (errorCount >= currentSchema.type.length) {
+			this.error(
+				`"${json}" should be ${currentSchema.type.join(" or ")}`,
+				"type",
+				position,
+			);
 		}
 
 		return;
@@ -116,6 +144,10 @@ function validateSchema(json, position, currentSchema = this.schema) {
 		const key = validateAnyOf.call(this, json, currentSchema.anyOf, position);
 
 		validateSchema.call(this, json, position, currentSchema.anyOf[key]);
+		return;
+	}
+
+	if (Object.keys(currentSchema).length === 0) {
 		return;
 	}
 
