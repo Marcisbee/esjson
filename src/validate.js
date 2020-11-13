@@ -1,4 +1,4 @@
-const ValidationError = require("./diagnostics/error");
+const ValidationError = require("./diagnostics/validation-error");
 const Warning = require("./diagnostics/warning");
 const isInRuleset = require("./utils/is-in-ruleset");
 const validateSchema = require("./validate/schema");

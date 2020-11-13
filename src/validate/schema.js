@@ -1,3 +1,4 @@
+const GenericError = require("../diagnostics/generic-error");
 const jsonPointer = require("../json-pointer");
 
 const validateProperties = require("./properties");
@@ -19,7 +20,7 @@ function validateSchema(json, position, currentSchema = this.schema) {
 		typeof currentSchema === "string" ||
 		!currentSchema
 	) {
-		throw new Error("Invalid schema");
+		throw new GenericError("Invalid schema");
 	}
 
 	if (currentSchema.type === "array") {
@@ -97,6 +98,10 @@ function validateSchema(json, position, currentSchema = this.schema) {
 			return;
 		}
 
+		if (currentSchema.enum) {
+			validateEnum.call(this, json, currentSchema.enum, position);
+		}
+
 		return;
 	}
 
@@ -124,8 +129,25 @@ function validateSchema(json, position, currentSchema = this.schema) {
 				"type",
 				position,
 			);
+			return;
 		}
 
+		if (currentSchema.enum) {
+			validateEnum.call(this, json, currentSchema.enum, position);
+		}
+
+		return;
+	}
+
+	if (currentSchema.enum) {
+		validateEnum.call(this, json, currentSchema.enum, position);
+		return;
+	}
+
+	if (!this.shallow && currentSchema.anyOf) {
+		const key = validateAnyOf.call(this, json, currentSchema.anyOf, position);
+
+		validateSchema.call(this, json, position, currentSchema.anyOf[key]);
 		return;
 	}
 
@@ -140,18 +162,11 @@ function validateSchema(json, position, currentSchema = this.schema) {
 		return;
 	}
 
-	if (!this.shallow && currentSchema.anyOf) {
-		const key = validateAnyOf.call(this, json, currentSchema.anyOf, position);
-
-		validateSchema.call(this, json, position, currentSchema.anyOf[key]);
-		return;
-	}
-
 	if (Object.keys(currentSchema).length === 0) {
 		return;
 	}
 
-	throw new Error(
+	throw new GenericError(
 		`Unhandled schema "${JSON.stringify(currentSchema)}" with value "${json}"`,
 	);
 }

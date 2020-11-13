@@ -1,6 +1,6 @@
 class Diagnostics {
 	/**
-   * @param {{ pass: string[], errors: (import('./error') | import('./warning') | Error)[]}} diagnostics
+   * @param {{ pass: string[], errors: (import('./validation-error') | import('./warning') | Error)[]}} diagnostics
    */
 	constructor(diagnostics) {
 		this.diagnostics = diagnostics;

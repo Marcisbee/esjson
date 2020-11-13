@@ -1,3 +1,5 @@
+const GenericError = require("./diagnostics/generic-error");
+
 /**
  * @param {Record<string, any>} source
  * @param {string[]} path
@@ -10,7 +12,7 @@ function jsonPointer(source, path) {
 		const transformedKey = transform(key);
 
 		if (!output || typeof output[transformedKey] === "undefined") {
-			throw new Error(
+			throw new GenericError(
 				`Definition with $ref "#/${path.join("/")}" was not found`,
 			);
 		}

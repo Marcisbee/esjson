@@ -1,7 +1,7 @@
 const {test} = require("uvu");
 const assert = require("uvu/assert");
 
-const ValidationError = require("../src/diagnostics/error");
+const ValidationError = require("../src/diagnostics/validation-error");
 const output = require("../src/output");
 
 const schema = {type: "null"};

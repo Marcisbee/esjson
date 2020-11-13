@@ -7,6 +7,7 @@ const Warning = require("./diagnostics/warning");
 const Diagnostics = require("./diagnostics/diagnostics");
 const report = require("./report");
 const validate = require("./validate");
+const GenericError = require("./diagnostics/generic-error");
 
 const defaultConfig = {
 	include: ["*.json"],
@@ -23,8 +24,8 @@ const defaultConfig = {
 /**
  * @typedef Context
  * @property {(json: *, position: (string | number)[], currentSchema?: *) => void} validateSchema
- * @property {(message: string, code: string, position: (string | number)[], ref?: Ref) => (import('./diagnostics/error') | Warning | Error)} error
- * @property {(import('./diagnostics/error') | Warning | Diagnostics | Error)[]} errors
+ * @property {(message: string, code: string, position: (string | number)[], ref?: Ref) => (import('./diagnostics/validation-error') | Warning | Error)} error
+ * @property {(import('./diagnostics/validation-error') | Warning | Diagnostics | Error)[]} errors
  * @property {Record<string, any>} schema
  * @property {Record<string, any>} config
  * @property {string} filePath
@@ -80,15 +81,15 @@ function validator() {
 				const [type, name, title] = rule.split(":");
 
 				if (!rule) {
-					throw new Error("Empty `allow` option provided");
+					throw new GenericError("Empty `allow` option provided");
 				}
 
 				if (!type) {
-					throw new Error("Second parameter is not defined in `allow` option");
+					throw new GenericError("Second parameter is not defined in `allow` option");
 				}
 
 				if (!type) {
-					throw new Error("Third parameter is not defined in `allow` option");
+					throw new GenericError("Third parameter is not defined in `allow` option");
 				}
 
 				if (title) {

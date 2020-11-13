@@ -1,7 +1,7 @@
 const {dim, yellow, red, bold, green, blue} = require("colorette");
 
 const Diagnostics = require("./diagnostics/diagnostics");
-const ValidationError = require("./diagnostics/error");
+const ValidationError = require("./diagnostics/validation-error");
 const Warning = require("./diagnostics/warning");
 const plural = require("./utils/plural");
 

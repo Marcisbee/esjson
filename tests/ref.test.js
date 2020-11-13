@@ -1,7 +1,8 @@
 const {test} = require("uvu");
 const assert = require("uvu/assert");
 
-const ValidationError = require("../src/diagnostics/error");
+const GenericError = require("../src/diagnostics/generic-error");
+const ValidationError = require("../src/diagnostics/validation-error");
 const output = require("../src/output");
 
 const schema = {
@@ -28,11 +29,10 @@ test("throws error with $ref that's not found", () => {
 	};
 	const errors = output("null", customSchema, userConfig);
 	const expectation = [
-		new Error('Definition with $ref "#/definitions/NotFound" was not found')
+		new GenericError('Definition with $ref "#/definitions/NotFound" was not found')
 	];
 
 	assert.equal(errors, expectation);
-	assert.equal(errors[0].message, expectation[0].message);
 });
 
 test("throws error with null", () => {
