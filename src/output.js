@@ -10,7 +10,8 @@ function output(fileContents, schema, config) {
 	try {
 		validate(null, fileContents, schema, config);
 	} catch (errors) {
-		return errors;
+		// Ensure output is array
+		return [].concat(errors);
 	}
 
 	return [];
