@@ -1,11 +1,15 @@
 const GenericError = require("../diagnostics/generic-error");
-const jsonPointer = require("../json-pointer");
 
-const validateProperties = require("./properties");
-const validateItems = require("./items");
-const validateRequired = require("./required");
 const validateEnum = require("./enum");
-const validateAnyOf = require("./anyOf");
+const validateAnyOf = require("./any-of");
+const validateString = require("./type/string");
+const validateObject = require("./type/object");
+const validateNumber = require("./type/number");
+const validateBoolean = require("./type/boolean");
+const validateNull = require("./type/null");
+const validateMultiple = require("./type/multiple");
+const validateArray = require("./type/array");
+const validateRef = require("./ref");
 
 /**
  * @this {import('src').Context}
@@ -24,118 +28,37 @@ function validateSchema(json, position, currentSchema = this.schema) {
 	}
 
 	if (currentSchema.type === "array") {
-		if (!Array.isArray(json)) {
-			this.error('Incorrect type. Expected "array".', "type", position);
-			return;
-		}
-
-		if (!this.shallow && currentSchema.items) {
-			validateItems.call(this, json, currentSchema.items, position);
-		}
-
+		validateArray.call(this, json, currentSchema, position);
 		return;
 	}
 
 	if (currentSchema.type === "object") {
-		if (!json || typeof json !== "object" || Array.isArray(json)) {
-			this.error('Incorrect type. Expected "object".', "type", position);
-			return;
-		}
-
-		if (!this.shallow && currentSchema.required) {
-			validateRequired.call(this, json, currentSchema.required, position);
-		}
-
-		if (currentSchema.properties) {
-			validateProperties.call(this, json, currentSchema, position);
-		}
-
+		validateObject.call(this, json, currentSchema, position);
 		return;
 	}
 
 	if (currentSchema.type === "string") {
-		if (typeof json !== "string") {
-			this.error(`"${json}" should be string`, "type", position);
-			return;
-		}
-
-		if (currentSchema.enum) {
-			validateEnum.call(this, json, currentSchema.enum, position);
-		}
-
+		validateString.call(this, json, currentSchema, position);
 		return;
 	}
 
 	if (currentSchema.type === "number" || currentSchema.type === "integer") {
-		if (typeof json !== "number") {
-			this.error(`"${json}" should be number`, "type", position);
-			return;
-		}
-
-		if (currentSchema.enum) {
-			validateEnum.call(this, json, currentSchema.enum, position);
-		}
-
+		validateNumber.call(this, json, currentSchema, position);
 		return;
 	}
 
 	if (currentSchema.type === "boolean") {
-		if (typeof json !== "boolean") {
-			this.error(`"${json}" should be boolean`, "type", position);
-			return;
-		}
-
-		if (currentSchema.enum) {
-			validateEnum.call(this, json, currentSchema.enum, position);
-		}
-
+		validateBoolean.call(this, json, currentSchema, position);
 		return;
 	}
 
 	if (currentSchema.type === "null") {
-		if (json !== null) {
-			this.error(`"${json}" should be null`, "type", position);
-			return;
-		}
-
-		if (currentSchema.enum) {
-			validateEnum.call(this, json, currentSchema.enum, position);
-		}
-
+		validateNull.call(this, json, currentSchema, position);
 		return;
 	}
 
 	if (Array.isArray(currentSchema.type)) {
-		let errorCount = 0;
-		for (const type of currentSchema.type) {
-			try {
-				validateSchema.call(
-					{...this, shallow: true},
-					json,
-					position,
-					{
-						type,
-					},
-				);
-				return;
-			} catch (e) {
-				errorCount++;
-			}
-		}
-
-		if (errorCount >= currentSchema.type.length) {
-			this.error(
-				`"${json}" should be ${currentSchema.type.join(" or ")}`,
-				"type",
-				position,
-			);
-			return;
-		}
-
-		if (currentSchema.enum) {
-			validateEnum.call(this, json, currentSchema.enum, position);
-		}
-
+		validateMultiple.call(this, json, currentSchema, position);
 		return;
 	}
 
@@ -152,13 +75,7 @@ function validateSchema(json, position, currentSchema = this.schema) {
 	}
 
 	if (currentSchema.$ref) {
-		const match = currentSchema.$ref.match(/^#\/(.*)$/);
-		if (match && match[1]) {
-			const schema = jsonPointer(this.schema, match[1].split("/"));
-			validateSchema.call(this, json, position, schema);
-			return;
-		}
-
+		validateRef.call(this, json, currentSchema, position);
 		return;
 	}
 
