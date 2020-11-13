@@ -6,10 +6,6 @@
  */
 function validateItems(value, items, position) {
 	for (const key in value) {
-		if (!Object.prototype.hasOwnProperty.call(value, key)) {
-			continue;
-		}
-
 		this.validateSchema(value[key], position.concat(key), items);
 	}
 }

@@ -6,10 +6,6 @@
  */
 function validateProperties(object, currentSchema, position) {
 	for (const key in object) {
-		if (!Object.prototype.hasOwnProperty.call(object, key)) {
-			continue;
-		}
-
 		const property = currentSchema.properties[key];
 		if (property === undefined) {
 			if (
