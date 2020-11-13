@@ -85,11 +85,15 @@ function validator() {
 				}
 
 				if (!type) {
-					throw new GenericError("Second parameter is not defined in `allow` option");
+					throw new GenericError(
+						"Second parameter is not defined in `allow` option",
+					);
 				}
 
 				if (!type) {
-					throw new GenericError("Third parameter is not defined in `allow` option");
+					throw new GenericError(
+						"Third parameter is not defined in `allow` option",
+					);
 				}
 
 				if (title) {
