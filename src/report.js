@@ -63,7 +63,7 @@ function report(params) {
 				"\n" +
 				blue(`ℹ ${passed} passed`) +
 				"\n" +
-				bold(yellow(`⚠ ${warnings}`)) +
+				bold(yellow(`! ${warnings}`)) +
 				"\n\n";
 			const reportChunks = Object.entries(params.groupedProblems).map((
 				[key, errors],

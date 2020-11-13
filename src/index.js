@@ -66,6 +66,12 @@ function validator() {
 
 	if (args["--empty"]) {
 		userConfig.empty = args["--empty"];
+
+		userConfig.empty.forEach((rule) => {
+			console.log(
+				yellow(`${bold("!")} Allowing "${rule}" to pass as empty files`),
+			);
+		});
 	}
 
 	if (args["--allow"]) {
