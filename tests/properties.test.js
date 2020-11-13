@@ -47,6 +47,12 @@ test("passes with all valid properties", () => {
 	assert.equal(errors, []);
 });
 
+test("passes with all additional properties", () => {
+	const errors = output('{"productId": 123, "productName": "asd", "foo": "bar"}', schema, userConfig);
+
+	assert.equal(errors, []);
+});
+
 test("throws error with invalid productId", () => {
 	const errors = output('{"productId": null}', schema, userConfig);
 

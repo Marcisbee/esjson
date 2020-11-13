@@ -78,6 +78,34 @@ test("passes with extra property in object and `additionalProperties` set to tru
 	assert.equal(errors, []);
 });
 
+test("passes with extra property type number and `additionalProperties` set to true", () => {
+	const customSchema = {
+		...schema,
+		additionalProperties: {
+			type: 'number',
+		},
+	};
+
+	const errors = output('{"asd": 123}', customSchema, userConfig);
+
+	assert.equal(errors, []);
+});
+
+test("throws error with extra property type string and `additionalProperties` set to true", () => {
+	const customSchema = {
+		...schema,
+		additionalProperties: {
+			type: 'string',
+		},
+	};
+
+	const errors = output('{"asd": 123}', customSchema, userConfig);
+
+	assert.equal(errors, [
+		new ValidationError('"123" should be string', 'type', ["asd"])
+	]);
+});
+
 test("throws error with extra property in object and `additionalProperties` set to false", () => {
 	const customSchema = {
 		...schema,

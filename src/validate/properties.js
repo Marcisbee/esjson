@@ -10,9 +10,13 @@ function validateProperties(object, currentSchema, position) {
 			continue;
 		}
 
-		const properties = currentSchema.properties[key];
-		if (properties === undefined) {
-			if (!this.shallow && !currentSchema.additionalProperties) {
+		const property = currentSchema.properties[key];
+		if (property === undefined) {
+			if (
+				!this.shallow &&
+				!currentSchema.additionalProperties &&
+				currentSchema.additionalProperties !== undefined
+			) {
 				this.error(
 					`Property "${key}" is not allowed`,
 					"additionalProperties",
@@ -24,10 +28,19 @@ function validateProperties(object, currentSchema, position) {
 				);
 			}
 
+			if (typeof currentSchema.additionalProperties === "object") {
+				this.validateSchema(
+					object[key],
+					position.concat(key),
+					currentSchema.additionalProperties,
+				);
+				continue;
+			}
+
 			continue;
 		}
 
-		this.validateSchema(object[key], position.concat(key), properties);
+		this.validateSchema(object[key], position.concat(key), property);
 	}
 }
 
