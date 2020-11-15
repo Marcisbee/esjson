@@ -70,6 +70,10 @@ function validateSchema(json, position, currentSchema = this.schema) {
 	if (!this.shallow && currentSchema.anyOf) {
 		const key = validateAnyOf.call(this, json, currentSchema.anyOf, position);
 
+		if (typeof key === "undefined") {
+			return;
+		}
+
 		validateSchema.call(this, json, position, currentSchema.anyOf[key]);
 		return;
 	}

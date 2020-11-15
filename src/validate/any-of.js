@@ -5,11 +5,10 @@
  * @param {(string | number)[]} position
  */
 function validateAnyOf(value, currentSchema, position) {
-	for (const key in currentSchema) {
-		if (!Object.prototype.hasOwnProperty.call(currentSchema, key)) {
-			continue;
-		}
+	let errorDepth = position.length + 1;
+	let possibleError;
 
+	for (const key in currentSchema) {
 		try {
 			// Run shallow validation
 			this.validateSchema.call(
@@ -20,9 +19,17 @@ function validateAnyOf(value, currentSchema, position) {
 			);
 
 			return key;
-		} catch (_) {
-			// Silent fail
+		} catch (e) {
+			if (e.position && e.position.length > errorDepth) {
+				possibleError = key;
+				errorDepth = e.position.length;
+			}
 		}
+	}
+
+	// Guessing the error based on error depth
+	if (possibleError) {
+		return possibleError;
 	}
 
 	this.error("Value doesn't match any of criteria", "anyOf", position);
