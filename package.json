@@ -7,7 +7,7 @@
     "esjson": "bin/esjson.js"
   },
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node bin/esjson.js",
     "lint": "rome check",
     "test": "uvu",
     "coverage": "c8 --check-coverage npm test"

@@ -2,6 +2,7 @@ const ValidationError = require("./diagnostics/validation-error");
 const Warning = require("./diagnostics/warning");
 const isInRuleset = require("./utils/is-in-ruleset");
 const validateSchema = require("./validate/schema");
+const parseJSON = require("./parser");
 
 /**
  * @param {string} filePath
@@ -11,7 +12,8 @@ const validateSchema = require("./validate/schema");
  * @param {(string | number)[]} position
  */
 function validate(filePath, fileContents, schema, config, position = []) {
-	const json = JSON.parse(fileContents);
+	// const json = JSON.parse(fileContents);
+	const json = parseJSON(fileContents);
 	const isEmpty =
 		!fileContents.trim() || (json && Object.keys(json).length === 0);
 
@@ -29,7 +31,7 @@ function validate(filePath, fileContents, schema, config, position = []) {
 		schema,
 		config,
 		errors: [],
-		error(message, code, pos, ref) {
+		error(message, code, pos, ref, lineNo) {
 			if (
 				ref &&
 				this.config.allow &&
@@ -37,7 +39,7 @@ function validate(filePath, fileContents, schema, config, position = []) {
 				((ref.definition && this.config.allow[code][ref.key] === ref.definition) ||
 				this.config.allow[code][ref.key] === true)
 			) {
-				const warning = new Warning(message, code, pos);
+				const warning = new Warning(message, code, pos, undefined, lineNo);
 
 				if (this.shallow) {
 					throw warning;
@@ -48,7 +50,7 @@ function validate(filePath, fileContents, schema, config, position = []) {
 				return warning;
 			}
 
-			const error = new ValidationError(message, code, pos);
+			const error = new ValidationError(message, code, pos, undefined, lineNo);
 
 			if (this.shallow) {
 				throw error;

@@ -1,3 +1,5 @@
+const getLineNumber = require('../utils/get-line-number');
+
 /**
  * @this {import('src').Context}
  * @param {*} object
@@ -15,6 +17,7 @@ function validateRequired(object, currentSchema, position) {
 					key,
 					definition: currentSchema.title,
 				},
+				getLineNumber(object, key),
 			);
 		}
 	}
