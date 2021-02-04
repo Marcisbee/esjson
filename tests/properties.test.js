@@ -61,7 +61,7 @@ test("throws error with invalid productId", () => {
 	]);
 });
 
-test("throws error with invalid productId", () => {
+test("throws error with invalid productName", () => {
 	const errors = output('{"productName": null}', schema, userConfig);
 
 	assert.equal(errors, [

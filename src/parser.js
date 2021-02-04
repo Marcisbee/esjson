@@ -10,6 +10,8 @@ function nullishCoalescing(...args) {
 
 		return arg;
 	}
+
+	return null;
 }
 
 /**
