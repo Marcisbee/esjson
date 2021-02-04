@@ -45,7 +45,7 @@ module.exports = function parseJSON(str) {
 				if (initial) {
 					Object.defineProperty(
 						result,
-						'__line_no',
+						"__line_no",
 						{
 							value: lineNo,
 							writable: false,
@@ -75,7 +75,7 @@ module.exports = function parseJSON(str) {
 			if (initial) {
 				Object.defineProperty(
 					result,
-					'__line_no',
+					"__line_no",
 					{
 						value: startingLineNo,
 						writable: false,

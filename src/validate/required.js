@@ -1,4 +1,4 @@
-const getLineNumber = require('../utils/get-line-number');
+const getLineNumber = require("../utils/get-line-number");
 
 /**
  * @this {import('src').Context}

@@ -11,16 +11,18 @@ const plural = require("./utils/plural");
  */
 function report(params) {
 	if (params instanceof Warning) {
-		const position = params.lineNo === null
-			? dim(`#/${params.position.join("/")}`)
-			: dim(`on line ${params.lineNo}`);
+		const position =
+			params.lineNo === null
+				? dim(`#/${params.position.join("/")}`)
+				: dim(`on line ${params.lineNo}`);
 		return `  ${yellow("warning")}  ${params.message}  ${position}`;
 	}
 
 	if (params instanceof ValidationError) {
-		const position = params.lineNo === null
-			? dim(`#/${params.position.join("/")}`)
-			: dim(`on line ${params.lineNo}`);
+		const position =
+			params.lineNo === null
+				? dim(`#/${params.position.join("/")}`)
+				: dim(`on line ${params.lineNo}`);
 		return `  ${red("error")}  ${params.message}  ${position}`;
 	}
 
