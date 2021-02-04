@@ -39,7 +39,7 @@
     "src"
   ],
   "dependencies": {
-    "arg": "^4.1.3",
+    "arg": "^5.0.0",
     "colorette": "^1.2.1"
   }
 }
