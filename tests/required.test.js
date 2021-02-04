@@ -31,8 +31,8 @@ test("throws error with empty object", () => {
 	const errors = output("{}", schema, userConfig);
 
 	assert.equal(errors, [
-		new ValidationError('Missing required key "productId"', "required", []),
-		new ValidationError('Missing required key "productName"', "required", [])
+		new ValidationError('Missing required key "productId"', "required", [], undefined, 1),
+		new ValidationError('Missing required key "productName"', "required", [], undefined, 1)
 	]);
 });
 
@@ -40,15 +40,15 @@ test("throws error with valid productId", () => {
 	const errors = output('{"productId": 123}', schema, userConfig);
 
 	assert.equal(errors, [
-		new ValidationError('Missing required key "productName"', "required", [])
+		new ValidationError('Missing required key "productName"', "required", [], undefined, 0)
 	]);
 });
 
 test("throws error with valid productName", () => {
-	const errors = output('{"productName": "asd"}', schema, userConfig);
+	const errors = output('{\n"productName": "asd"\n}', schema, userConfig);
 
 	assert.equal(errors, [
-		new ValidationError('Missing required key "productId"', "required", [])
+		new ValidationError('Missing required key "productId"', "required", [], undefined, 1)
 	]);
 });
 
@@ -62,16 +62,16 @@ test("throws error with invalid productId", () => {
 	const errors = output('{"productId": null}', schema, userConfig);
 
 	assert.equal(errors, [
-		new ValidationError('Missing required key "productName"', "required", []),
+		new ValidationError('Missing required key "productName"', "required", [], undefined, 0),
 		new ValidationError('"null" should be number', "type", ["productId"])
 	]);
 });
 
-test("throws error with invalid productId", () => {
+test("throws error with invalid productName", () => {
 	const errors = output('{"productName": null}', schema, userConfig);
 
 	assert.equal(errors, [
-		new ValidationError('Missing required key "productId"', "required", []),
+		new ValidationError('Missing required key "productId"', "required", [], undefined, 0),
 		new ValidationError('"null" should be string', "type", ["productName"])
 	]);
 });

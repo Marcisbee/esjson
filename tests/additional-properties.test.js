@@ -112,10 +112,10 @@ test("throws error with extra property in object and `additionalProperties` set 
 		additionalProperties: false,
 	};
 
-	const errors = output('{"asd": 123}', customSchema, userConfig);
+	const errors = output('{\n"asd": 123\n}', customSchema, userConfig);
 
 	assert.equal(errors, [
-		new ValidationError('Property "asd" is not allowed', "additionalProperties", [])
+		new ValidationError('Property "asd" is not allowed', "additionalProperties", [], undefined, 1)
 	]);
 });
 

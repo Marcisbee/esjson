@@ -24,7 +24,7 @@ const defaultConfig = {
 /**
  * @typedef Context
  * @property {(json: *, position: (string | number)[], currentSchema?: *) => void} validateSchema
- * @property {(message: string, code: string, position: (string | number)[], ref?: Ref) => (import('./diagnostics/validation-error') | Warning | Error)} error
+ * @property {(message: string, code: string, position: (string | number)[], ref?: Ref, lineNo?: number) => (import('./diagnostics/validation-error') | Warning | Error)} error
  * @property {(import('./diagnostics/validation-error') | Warning | Diagnostics | Error)[]} errors
  * @property {Record<string, any>} schema
  * @property {Record<string, any>} config
