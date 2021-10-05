@@ -30,6 +30,7 @@ const defaultConfig = {
  * @property {Record<string, any>} config
  * @property {string} filePath
  * @property {boolean=} shallow
+ * @property {boolean=} catch
  */
 
 function validator() {

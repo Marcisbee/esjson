@@ -41,7 +41,7 @@ function validate(filePath, fileContents, schema, config, position = []) {
 			) {
 				const warning = new Warning(message, code, pos, undefined, lineNo);
 
-				if (this.shallow) {
+				if (this.shallow || this.catch) {
 					throw warning;
 				}
 
@@ -52,7 +52,7 @@ function validate(filePath, fileContents, schema, config, position = []) {
 
 			const error = new ValidationError(message, code, pos, undefined, lineNo);
 
-			if (this.shallow) {
+			if (this.shallow || this.catch) {
 				throw error;
 			}
 
