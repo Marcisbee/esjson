@@ -1,6 +1,7 @@
 const GenericError = require("../diagnostics/generic-error");
 
 const validateEnum = require("./enum");
+const validateAllOf = require("./all-of");
 const validateAnyOf = require("./any-of");
 const validateString = require("./type/string");
 const validateObject = require("./type/object");
@@ -64,6 +65,17 @@ function validateSchema(json, position, currentSchema = this.schema) {
 
 	if (currentSchema.enum) {
 		validateEnum.call(this, json, currentSchema.enum, position);
+		return;
+	}
+
+	if (!this.shallow && currentSchema.allOf) {
+		const key = validateAllOf.call(this, json, currentSchema.allOf, position);
+
+		if (typeof key === "undefined") {
+			return;
+		}
+
+		validateSchema.call(this, json, position, currentSchema.allOf[key]);
 		return;
 	}
 
