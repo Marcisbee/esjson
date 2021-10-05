@@ -84,7 +84,7 @@ function report(params) {
 			"\n" +
 			blue(`ℹ ${passed} validated`) +
 			"\n" +
-			bold(green("\u2714 No knowns problems!")) +
+			bold(green("\u2714 No known problems!")) +
 			"\n\n",
 		);
 		process.exit(0);

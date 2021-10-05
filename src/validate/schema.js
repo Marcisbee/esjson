@@ -1,8 +1,11 @@
 const GenericError = require("../diagnostics/generic-error");
 
-const validateEnum = require("./enum");
 const validateAllOf = require("./all-of");
 const validateAnyOf = require("./any-of");
+const validateConst = require("./const");
+const validateEnum = require("./enum");
+const validateIfThenElse = require("./if-then-else");
+const validateNot = require("./not");
 const validateString = require("./type/string");
 const validateObject = require("./type/object");
 const validateNumber = require("./type/number");
@@ -26,6 +29,41 @@ function validateSchema(json, position, currentSchema = this.schema) {
 		!currentSchema
 	) {
 		throw new GenericError("Invalid schema");
+	}
+
+	if (currentSchema.if) {
+		const key = validateIfThenElse.call(
+			this,
+			json,
+			{
+				type: currentSchema.type,
+				...currentSchema.if,
+			},
+			position,
+		);
+
+		if (typeof key === "undefined") {
+			currentSchema = {
+				...currentSchema,
+				if: undefined,
+				then: undefined,
+				else: undefined,
+				...(currentSchema.then || {type: "object"}),
+			};
+		} else {
+			currentSchema = {
+				...currentSchema,
+				if: undefined,
+				then: undefined,
+				else: undefined,
+				...(currentSchema.else || {type: "object"}),
+			};
+		}
+	}
+
+	if (currentSchema.const) {
+		validateConst.call(this, json, currentSchema.const, position);
+		return;
 	}
 
 	if (currentSchema.type === "array") {
@@ -65,6 +103,11 @@ function validateSchema(json, position, currentSchema = this.schema) {
 
 	if (currentSchema.enum) {
 		validateEnum.call(this, json, currentSchema.enum, position);
+		return;
+	}
+
+	if (currentSchema.not) {
+		validateNot.call(this, json, currentSchema.not, position);
 		return;
 	}
 

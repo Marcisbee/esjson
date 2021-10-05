@@ -1,4 +1,5 @@
 const validateEnum = require("../enum");
+const validateNot = require("../not");
 
 /**
  * @this {import('src').Context}
@@ -14,6 +15,10 @@ function validateString(value, currentSchema, position) {
 
 	if (currentSchema.enum) {
 		validateEnum.call(this, value, currentSchema.enum, position);
+	}
+
+	if (currentSchema.not) {
+		validateNot.call(this, value, currentSchema.not, position);
 	}
 }
 

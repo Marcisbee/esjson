@@ -13,9 +13,9 @@ function validateAllOf(value, currentSchema, position) {
 
 	for (const key in currentSchema) {
 		try {
-			// Run shallow validation
+			// Run full validation
 			this.validateSchema.call(
-				{...this, shallow: true},
+				{...this, catch: true},
 				value,
 				position,
 				currentSchema[key],
