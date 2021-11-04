@@ -184,4 +184,51 @@ test("throws error with custom nested object schema 2", () => {
 	]);
 });
 
+test("edge case #1", () => {
+	const errors = output(JSON.stringify({
+		"type": "jsonlogic",
+		"schema": {
+			"var": "input.selection"
+		}
+	}), {
+		"anyOf": [
+			{
+				"$ref": "#/definitions/JsonLogicDefinition"
+			},
+			{
+				"type": "string"
+			}
+		],
+		definitions: {
+			JsonLogicSchema: {
+				"type": "object",
+				"additionalProperties": {}
+			},
+			JsonLogicDefinition: {
+				"type": "object",
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [
+							"jsonlogic"
+						]
+					},
+					"schema": {
+						"anyOf": [
+							{
+								"$ref": "#/definitions/JsonLogicSchema"
+							},
+							{
+								"type": "boolean"
+							}
+						]
+					}
+				}
+			},
+		},
+	}, userConfig);
+
+	assert.equal(errors, []);
+});
+
 test.run();

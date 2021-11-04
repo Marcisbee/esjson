@@ -28,6 +28,10 @@ function validateProperties(object, currentSchema, position) {
 			}
 
 			if (typeof currentSchema.additionalProperties === "object") {
+				if (Object.keys(currentSchema.additionalProperties).length === 0) {
+					continue;
+				}
+
 				this.validateSchema(
 					object[key],
 					position.concat(key),
