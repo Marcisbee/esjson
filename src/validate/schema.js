@@ -122,7 +122,7 @@ function validateSchema(json, position, currentSchema = this.schema) {
 		return;
 	}
 
-	if (!this.shallow && currentSchema.anyOf) {
+	if (currentSchema.anyOf) {
 		const key = validateAnyOf.call(this, json, currentSchema.anyOf, position);
 
 		if (typeof key === "undefined") {
