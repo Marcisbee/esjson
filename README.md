@@ -1,10 +1,10 @@
 # esjson
 JSON Schema validator (cli)
 
-![CI](https://img.shields.io/github/workflow/status/Marcisbee/esjson/CI?style=flat-square)
 [![npm version](https://img.shields.io/npm/v/esjson.svg?style=flat-square)](https://www.npmjs.com/package/esjson)
 [![npm downloads](https://img.shields.io/npm/dm/esjson.svg?style=flat-square)](https://www.npmjs.com/package/esjson)
 [![gzip bundle size](https://img.shields.io/bundlephobia/minzip/esjson?style=flat-square)](https://bundlephobia.com/result?p=esjson)
+[![discord](https://dcbadge.vercel.app/api/server/a62gfaDW2e?style=flat-square)](https://discord.gg/a62gfaDW2e)
 
 
 ## Command line interface
